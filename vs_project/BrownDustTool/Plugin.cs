@@ -111,9 +111,11 @@ namespace LobbyTableDumper
                             {
                                 int id = (int)idField.GetValue(result);
                                 int interactionId = (int)interactionIdField.GetValue(result);
-
-                                outputLines.Add($"{id},{interactionId}");
-                                successCount++;
+                                if(interactionId > 0)
+                                {
+                                    outputLines.Add($"{id},{interactionId}");
+                                    successCount++;
+                                }
                             }
                         }
                     }
