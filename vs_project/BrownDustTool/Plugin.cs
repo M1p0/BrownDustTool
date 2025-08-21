@@ -1,6 +1,8 @@
 ﻿using BepInEx;
 using BepInEx.Logging;
 using HarmonyLib;
+using Proto.Design.common;
+using Proto.Local;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -140,4 +142,114 @@ namespace LobbyTableDumper
             }
         }
     }
+
+
+
+
+    [HarmonyPatch(typeof(LobbySettingUI))]
+    [HarmonyPatch("OnEnable")]
+    public static class OnEnable_Patch
+    {
+        static MethodInfo _AddLobbyInfoDic = null;
+        static MethodInfo _GetTableNameByTypeWithLobby = null;
+        static bool bIsInited = false;
+        static bool bHasAdded = false;
+        static void Prefix()
+        {
+
+            Plugin.Log.LogError($"[LobbySettingUI] OnEnable Prefix");
+            InitMethod();
+
+            if (bHasAdded)
+                return;
+
+            int[] ItemIdArray = { 32, 36, 50, 53, 59, 73, 77, 94, 99 };
+
+            for (int i = 0; i < ItemIdArray.Length; i++)
+            {
+                int nItemId = ItemIdArray[i];
+                AddNewLobbyDeco(nItemId);
+            }
+
+            bHasAdded = true;
+        }
+
+        private static void InitMethod()
+        {
+            if (bIsInited)
+                return;
+
+            //Type ClientLocalInfoType = Type.GetType("Proto.Local.ClientLocalInfo, Assembly-CSharp");
+
+            Type ClientLocalInfoType = typeof(Proto.Local.ClientLocalInfo);
+            if (ClientLocalInfoType == null)
+            {
+                Plugin.Log.LogError($"[LobbySettingUI]找到不到ClientLocalInfo类型");
+                return;
+            }
+
+            _AddLobbyInfoDic = ClientLocalInfoType.GetMethod("AddLobbyInfoDic",
+                BindingFlags.NonPublic | BindingFlags.Static,
+                null,
+                new Type[] { typeof(ὦὧὭὯὩὮὧὧὢὩὢ), typeof(ὯὧὥὫὮὦὣὠὦὡὮ), typeof(long), typeof(ClientLocalDTO) },
+                null);
+
+            if ( _AddLobbyInfoDic == null )
+            {
+                Plugin.Log.LogError($"[LobbySettingUI]找到不到AddLobbyInfoDic方法");
+                return;
+            }
+
+            _GetTableNameByTypeWithLobby = ClientLocalInfoType.GetMethod("GetTableNameByTypeWithLobby",
+                BindingFlags.NonPublic | BindingFlags.Static,
+                null,
+                new Type[] { typeof(ὦὧὭὯὩὮὧὧὢὩὢ), typeof(ὯὧὥὫὮὦὣὠὦὡὮ) },
+                null);
+
+            if (_AddLobbyInfoDic == null)
+            {
+                Plugin.Log.LogError($"[LobbySettingUI]找到不到GetTableNameByTypeWithLobby方法");
+                return;
+            }
+
+            bIsInited = true;
+            Plugin.Log.LogError($"[LobbySettingUI] InitMethod finish");
+            
+        }
+
+        private static void AddNewLobbyDeco(int nItemId)
+        {
+            object objResult = null;
+            string szName = "";
+            LobbySettingItemTable lobbySettingItemTable = null;
+            ClientLocalDTO clientLocalDTO = null;
+
+            ὯὧὥὫὮὦὣὠὦὡὮ ὧὧὥὫὮὦὣὠὦὡὮ = ὯὧὥὫὮὦὣὠὦὡὮ.Movie;
+
+            clientLocalDTO = new ClientLocalDTO();
+            clientLocalDTO.SaveId = (long)nItemId;
+            clientLocalDTO.IsNew = 1;
+
+            lobbySettingItemTable = ὣὨὢὩὯὨὣὭὢὤὢ.ὭὬὬὠὨὯὢὨὭὠὨ(nItemId);
+            if (lobbySettingItemTable != null)
+            {
+                ὧὧὥὫὮὦὣὠὦὡὮ = (ὯὧὥὫὮὦὣὠὦὡὮ)lobbySettingItemTable.Type;
+            }
+
+            try
+            {
+                _AddLobbyInfoDic.Invoke(null, new object[] { ὦὧὭὯὩὮὧὧὢὩὢ.LobbyDeco, ὧὧὥὫὮὦὣὠὦὡὮ, (long)nItemId, clientLocalDTO });
+
+                objResult = _GetTableNameByTypeWithLobby.Invoke(null, new object[] { ὦὧὭὯὩὮὧὧὢὩὢ.LobbyDeco, ὧὧὥὫὮὦὣὠὦὡὮ });
+                szName = objResult as string;
+                ὯὨὢὤὪὦὩὣὮὦὡ.ὤὩὦὧὠὤὤὯὮὯὪ(ὪὩὭὤὫὥὣὠὠὪὬ.DB_CLIENT_LOCAL, clientLocalDTO, szName);
+                Plugin.Log.LogError($"[LobbySettingUI]添加Item {nItemId}成功 {ὦὧὭὯὩὮὧὧὢὩὢ.LobbyDeco}, Type: {ὧὧὥὫὮὦὣὠὦὡὮ}");
+            }
+            catch (Exception ex)
+            {
+                Plugin.Log.LogError($"[LobbySettingUI]添加Item {nItemId} 时出错: {ex.Message}");
+            }
+        }
+    }
+
 }
