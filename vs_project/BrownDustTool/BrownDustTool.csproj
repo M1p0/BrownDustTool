@@ -29,7 +29,10 @@
   
   <ItemGroup>
     <Reference Include="Assembly-CSharp">
-      <HintPath>..\..\..\Neowiz\Browndust2\Browndust2_10000001\BrownDust II_Data\Managed\Assembly-CSharp.dll</HintPath>
+      <HintPath>..\..\..\Browndust2\Browndust2_10000001\BrownDust II_Data\Managed\Assembly-CSharp.dll</HintPath>
+    </Reference>
+    <Reference Include="StompyRobot.SRDebugger">
+      <HintPath>..\..\..\Browndust2\Browndust2_10000001\BrownDust II_Data\Managed\StompyRobot.SRDebugger.dll</HintPath>
     </Reference>
   </ItemGroup>
   
