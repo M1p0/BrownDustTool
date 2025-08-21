@@ -1,1 +1,4 @@
 .vs
+/vs_project/BrownDustTool/bin/
+/vs_project/BrownDustTool/obj
+vs_project/BrownDustTool/copy_to_game.bat
