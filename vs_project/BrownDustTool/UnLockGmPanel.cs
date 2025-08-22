@@ -4,8 +4,14 @@ using HarmonyLib;
 using Proto.Net;
 using SRDebugger.Services;
 using System;
+using System.Buffers.Text;
 using System.Collections.Generic;
+using System.Reflection;
 using System.Text;
+using static UnityEngine.UIElements.UIR.Allocator2D;
+using static UnityEngine.UIElements.UxmlAttributeDescription;
+using UnityEngine.UIElements;
+using UnityEngine.XR;
 
 namespace BrownDustTool
 {
@@ -15,8 +21,10 @@ namespace BrownDustTool
     public static class UnLockGmPanel
     {
         [HarmonyPostfix]
-        public static void Postfix(ref Proto.Net.Define_AccessUserType __0)  //HarmonyPostfix似乎是使用__0来访问第一个参数
+        public static void Postfix(ref Proto.Net.Define_AccessUserType __0)
         {
+            //入参读取规则 https://harmony.pardeike.net/articles/patching-injections.html#method-arguments
+
             if (__0 == Define_AccessUserType.AuNormal)
             {
                 SRDebug.Init();

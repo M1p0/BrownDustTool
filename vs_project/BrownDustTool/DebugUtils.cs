@@ -11,6 +11,8 @@ using UnityEngine;
 
 namespace BrownDustTool
 {
+    using GlobalConfig = ὣὨὢὩὯὨὣὭὢὤὢ;
+
     //[HarmonyPatch(typeof(LobbySettingUI))]
     //[HarmonyPatch("OnEnable")]
     //public static class LogInteractionItemDB
