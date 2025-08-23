@@ -34,6 +34,9 @@
     <Reference Include="StompyRobot.SRDebugger">
       <HintPath>..\..\..\Browndust2\Browndust2_10000001\BrownDust II_Data\Managed\StompyRobot.SRDebugger.dll</HintPath>
     </Reference>
+    <Reference Include="UnityEngine.CoreModule">
+      <HintPath>..\..\..\Browndust2\Browndust2_10000001\BrownDust II_Data\Managed\UnityEngine.CoreModule.dll</HintPath>
+    </Reference>
   </ItemGroup>
   
   <Target Name="PostBuild" AfterTargets="PostBuildEvent">
