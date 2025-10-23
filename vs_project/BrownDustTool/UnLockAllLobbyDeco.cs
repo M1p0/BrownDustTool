@@ -13,8 +13,8 @@ using static UnityEngine.UIElements.StylePropertyAnimationSystem;
 
 namespace BrownDustTool
 {
-    using LocalDBInfoCache = ὯὥὠὥὤὧὮὤὭὭὥ;
-    using GlobalConfig = ὬὠὥὬὡὫὬὫὨὡὢ;
+    using LocalDBInfoCache = ὧὧὦὩὨὬὮὪὪὢὦ;
+    using GlobalConfig = ὦὮὡὭὨὩὥὬὬὬὩ;
 
     [HarmonyPatch(typeof(Proto.Design.common.SpineInteractionTable), "IsIgnoreUnlockDating", MethodType.Getter)]
     public static class SpineInteractionTablePatch
@@ -36,10 +36,10 @@ namespace BrownDustTool
 
         static void Prefix()
         {
-            //private static Dictionary<ὦὡὪὢὦὥὣὨὠὢὫ, Dictionary<long, ItemDBInfo>> ὦὣὬὤὠὬὪὢὤὯὫ = new Dictionary<ὦὡὪὢὦὥὣὨὠὢὫ, Dictionary<long, ItemDBInfo>>();
-            //private static Dictionary<ὦὡὪὢὦὥὣὨὠὢὫ, Dictionary<long, ItemDBInfo>> ὣὤὧὮὤὡὠὧὭὧὩ = new Dictionary<ὦὡὪὢὦὥὣὨὠὢὫ, Dictionary<long, ItemDBInfo>>();
-            //private static Dictionary<ὦὡὪὢὦὥὣὨὠὢὫ, Dictionary<long, ItemDBInfo>> ὨὡὣὯὦὩὪὦὫὯὥ = new Dictionary<ὦὡὪὢὦὥὣὨὠὢὫ, Dictionary<long, ItemDBInfo>>();
-            //private static Dictionary<int, ItemDBInfo> ὨὬὥὭὩὥὣὦὩὠὦ = new Dictionary<int, ItemDBInfo>(); 在globaltable里面找这个的引用 两个list的其中一个
+            //private static Dictionary<ὪὤὤὮὤὯὩὣὩὭὯ, Dictionary<long, ItemDBInfo>> ὮὧὡὪὩὦὣὡὮὤὦ = new Dictionary<ὪὤὤὮὤὯὩὣὩὭὯ, Dictionary<long, ItemDBInfo>>();
+            //private static Dictionary<ὪὤὤὮὤὯὩὣὩὭὯ, Dictionary<long, ItemDBInfo>> ὦὫὣὮὭὧὪὭὯὠὧ = new Dictionary<ὪὤὤὮὤὯὩὣὩὭὯ, Dictionary<long, ItemDBInfo>>();
+            //private static Dictionary<ὪὤὤὮὤὯὩὣὩὭὯ, Dictionary<long, ItemDBInfo>> ὠὠὢὢὡὥὬὨὭὫὬ = new Dictionary<ὪὤὤὮὤὯὩὣὩὭὯ, Dictionary<long, ItemDBInfo>>();
+            //private static Dictionary<int, ItemDBInfo> ὤὠὨὢὥὩὧὬὥὮὪ = new Dictionary<int, ItemDBInfo>(); 在LocalDBInfoCache里面找这个的引用 两个list的其中一个
             //这里存储的是已拥有的
 
 
@@ -48,7 +48,7 @@ namespace BrownDustTool
             //// 确保在列表已初始化后遍历
             //try
             //{
-            //    foreach (var item in LocalDBInfoCache.ὧὢὯὪὥὠὢὡὨὬὦ)
+            //    foreach (var item in LocalDBInfoCache.ὤὠὨὢὥὩὧὬὥὮὪ)
             //    {
             //        Plugin.Log.LogError($"InvenIndex:{item.InvenIndex} - ID:{item.Id}" +
             //            $"- Type:{item.Type} - Count:{item.Count} - KeepFlag:{item.KeepFlag}" +
@@ -66,8 +66,8 @@ namespace BrownDustTool
             Plugin.Log.LogError($"[AddAllLobbyDeco] StartingAddItem");
             try
             {
-                // 使用 AccessTools 获取字典字段
-                var dictionaryField = AccessTools.Field(typeof(LocalDBInfoCache), "ὨὬὥὭὩὥὣὦὩὠὦ");
+                // 使用 AccessTools 获取字典字段  这里就是已拥有的Dictionary, 通过上面注释找到的private static Dictionary<int, ItemDBInfo>
+                var dictionaryField = AccessTools.Field(typeof(LocalDBInfoCache), "ὤὠὨὢὥὩὧὬὥὮὪ");
                 var dictionary = dictionaryField?.GetValue(null) as Dictionary<int, ItemDBInfo>;
 
                 if (dictionary != null)
@@ -77,7 +77,7 @@ namespace BrownDustTool
                         int nItemId = interactionIdList[i];
                         ItemDBInfo item = new ItemDBInfo();
                         item.Id = nItemId;
-                        item.Type = (int)ὦὡὪὢὦὥὣὨὠὢὫ.LobbyDeco;  //todo:check一下类型
+                        item.Type = (int)ὪὤὤὮὤὯὩὣὩὭὯ.LobbyDeco;  //todo:check一下类型
                         item.Count = 1;
                         item.KeepFlag = 0;
                         item.TimeValue = 1755416694000;  //这个时间戳有待商榷 不知道实际用处
@@ -121,21 +121,22 @@ namespace BrownDustTool
             //"LobbySettingUI_RandomIncludeSkill";
             //"LobbySettingUI_RandomIncludeIllust";
             //"LobbySettingUI_RandomIncludeDatingSpine";
-            //public static LobbySettingItemTable ὪὫὦὭὧὯὮὩὪὫὪ(int ὣὠὪὦὤὥὭὪὤὥὯ)  通过上面的字符串找到这个全局配置表  LobbySettingItemTable GetItem(nItemId)
+            //public static LobbySettingItemTable ὠὡὤὧὮὮὡὥὣὫὡ(int ὣὠὪὦὤὥὭὪὤὥὯ)  通过上面的字符串找到这个全局配置表  LobbySettingItemTable GetItem(nItemId)
 
             if (interactionIdList != null && interactionIdList.Count > 0)
                 return;
             interactionIdList = new List<int>();
             try
             {
-                Type type = AccessTools.TypeByName("ὬὠὥὬὡὫὬὫὨὡὢ");
+                Type type = AccessTools.TypeByName("ὦὣὯὤὪὡὣὢὡὩὥ");  //这个是通过上面注释找到的这个整个public static class
                 if (type == null)
                 {
                     Plugin.Log.LogError("[AddAllLobbyDeco] Type not found!");
                     return;
                 }
 
-                MethodInfo method = AccessTools.Method(type, "ὪὫὦὭὧὯὮὩὪὫὪ", new Type[] { typeof(int) });
+                //这个就是上面注释找到的public static LobbySettingItemTable GetItem()这个函数
+                MethodInfo method = AccessTools.Method(type, "ὠὡὤὧὮὮὡὥὣὫὡ", new Type[] { typeof(int) });
                 if (method == null)
                 {
                     Plugin.Log.LogError("[AddAllLobbyDeco] Method not found!");
