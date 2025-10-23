@@ -134,7 +134,7 @@ namespace BrownDustTool
             //"LobbySettingUI_RandomIncludeIllust";
             //"LobbySettingUI_RandomIncludeDatingSpine";
             //private static ὭὤὩὠὪὦὥὭὬὬὬ<int, LobbySettingItemTable> ὫὡὤὢὤὣὤὥὡὢὭ = new ὠὣὬὩὭὮὥὧὬὨὫ<int, LobbySettingItemTable>(1, 0, 60000, null, new Func<int, LobbySettingItemTable>(ὦὣὯὤὪὡὣὢὡὩὥ.<> c.<> 9.ὡὭὣὭὩὯὢὢὨὯὨ), null, null);
-            //找上面这个Dictionary的引用,就能找到下面这个函数  这个Dictionary存了所有的Item,其实可以全部添加,现在只添加了LobbyDeco
+            //找上面这个Dictionary的引用,就能找到下面这个函数  这个Dictionary存了所有的Item
             //这个Dictionary所属的public static class应该就是静态的全局配置表
             //public static LobbySettingItemTable ὠὡὤὧὮὮὡὥὣὫὡ(int ὣὠὪὦὤὥὭὪὤὥὯ)  通过上面的字符串找到这个全局配置表  LobbySettingItemTable GetItem(nItemId)
 
@@ -143,16 +143,16 @@ namespace BrownDustTool
             interactionIdList = new List<int>();
             try
             {
-                Type type = AccessTools.TypeByName("ὦὣὯὤὪὡὣὢὡὩὥ");  //这个是通过上面注释找到的这个整个public static class
-                if (type == null)
+                Type GlobalTableType = AccessTools.TypeByName("ὦὣὯὤὪὡὣὢὡὩὥ");  //这个是通过上面注释找到的这个整个public static class
+                if (GlobalTableType == null)
                 {
                     Plugin.Log.LogError("[AddAllLobbyDeco] Type not found!");
                     return;
                 }
 
                 //这个就是上面注释找到的public static LobbySettingItemTable GetItem()这个函数
-                MethodInfo method = AccessTools.Method(type, "ὠὡὤὧὮὮὡὥὣὫὡ", new Type[] { typeof(int) });
-                if (method == null)
+                MethodInfo GetItemMethod = AccessTools.Method(GlobalTableType, "ὠὡὤὧὮὮὡὥὣὫὡ", new Type[] { typeof(int) });
+                if (GetItemMethod == null)
                 {
                     Plugin.Log.LogError("[AddAllLobbyDeco] Method not found!");
                     return;
@@ -172,7 +172,7 @@ namespace BrownDustTool
                     try
                     {
                         int nItemId = i; // 替换为实际的itemId
-                        object result = method.Invoke(null, new object[] { nItemId });
+                        object result = GetItemMethod.Invoke(null, new object[] { nItemId });
                         if (result == null)
                         {
                             continue;
@@ -199,17 +199,18 @@ namespace BrownDustTool
                                 continue;
                             }
 
-                            property = AccessTools.Property(resultType, "InteractionId");
-                            if (property != null)
-                            {
-                                objValue = property.GetValue(result);
-                                nInteractionId = Convert.ToInt32(objValue);
-                            }
-                            if (nInteractionId > 0)
-                            {
-                                interactionIdList.Add(nId);
-                                //Plugin.Log.LogError($"[AddAllLobbyDeco] AddItemSuccess: ItemId:{nId}, nInteractionId:{nInteractionId}");
-                            }
+                            //property = AccessTools.Property(resultType, "InteractionId");
+                            //if (property != null)
+                            //{
+                            //    objValue = property.GetValue(result);
+                            //    nInteractionId = Convert.ToInt32(objValue);
+                            //}
+                            //if (nInteractionId > 0)
+                            //{
+                            //    interactionIdList.Add(nId);
+                            //    //Plugin.Log.LogError($"[AddAllLobbyDeco] AddItemSuccess: ItemId:{nId}, nInteractionId:{nInteractionId}");
+                            //}  //这里不再限制nInteractionId了,直接添加所有物品
+                            interactionIdList.Add(nId);
                         }
                     }
                     catch (Exception ex)
