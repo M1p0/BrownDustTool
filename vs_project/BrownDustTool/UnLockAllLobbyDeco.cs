@@ -45,6 +45,7 @@ namespace BrownDustTool
     public static class AddAllLobbyDeco
     {
         public static List<int> interactionIdList;
+        static bool bAddedOnce = false;
 
         static void Prefix()
         {
@@ -71,6 +72,10 @@ namespace BrownDustTool
             //catch (Exception e)
             //{
             //}
+            if(bAddedOnce)
+            {
+                return;
+            }
 
             DumpLobbySettingItems();
 
@@ -108,6 +113,7 @@ namespace BrownDustTool
                         }
 
                     }
+                    bAddedOnce = true;
                 }
                 else
                 {
