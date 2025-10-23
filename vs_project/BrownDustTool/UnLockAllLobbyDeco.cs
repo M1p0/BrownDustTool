@@ -13,8 +13,20 @@ using static UnityEngine.UIElements.StylePropertyAnimationSystem;
 
 namespace BrownDustTool
 {
-    using LocalDBInfoCache = ὧὧὦὩὨὬὮὪὪὢὦ;
-    using GlobalConfig = ὦὮὡὭὨὩὥὬὬὬὩ;
+    using LocalDBInfoCache = ὧὧὦὩὨὬὮὪὪὢὦ;  //从LobbySettingUI比较容易找到这个
+    //LobbySettingUI Init所有List<ItemDBInfo>的地方很容易找到
+    //this.xxxxx.Clear(); 后面就会有从LocalDBInfoCache里面初始化List<ItemDBInfo>的地方
+    //private void ὬὧὪὨὣὤὠὩὩὢὢ()
+	//{
+	//	this.ὭὯὮὢὩὪὠὮὫὤὦ(ὪὤὤὮὤὯὩὣὩὭὯ.LobbyDeco);
+	//	this.ὩὥὣὨὩὭὩὮὫὭὫ.Clear();
+	//	this.ὪὫὨὦὮὥὮὤὯὡὪ.Clear();
+	//	this.ὥὦὢὨὥὡὦὥὢὯὨ.Clear();
+	//	this.ὡὤὧὠὧὥὢὮὤὯὯ.Clear();
+	//	ὦὮὡὭὨὩὥὬὬὬὩ.ὠὤὣὮὩὬὫὦὫὠὤ<ItemDBInfo>(new List<ItemDBInfo>(ὧὧὦὩὨὬὮὪὪὢὦ.ὢὡὬὩὩὫὧὦὯὡὩ), new Action<ItemDBInfo>(this.ὮὨὠὣὪὭὨὭὪὫὣ));
+	//	ὦὮὡὭὨὩὥὬὬὬὩ.ὠὤὣὮὩὬὫὦὫὠὤ<LobbySettingItemTable>(ὦὣὯὤὪὡὣὢὡὩὥ.ὢὬὢὬὠὤὦὮὢὧὨ(), new Action<LobbySettingItemTable>(this.ὧὡὧὧὦὠὢὭὮὢὩ));
+	//}
+    //不是ClientLocalInfo ClientLocalInfo是类似unity本地存档的东西
 
     [HarmonyPatch(typeof(Proto.Design.common.SpineInteractionTable), "IsIgnoreUnlockDating", MethodType.Getter)]
     public static class SpineInteractionTablePatch
@@ -121,6 +133,9 @@ namespace BrownDustTool
             //"LobbySettingUI_RandomIncludeSkill";
             //"LobbySettingUI_RandomIncludeIllust";
             //"LobbySettingUI_RandomIncludeDatingSpine";
+            //private static ὭὤὩὠὪὦὥὭὬὬὬ<int, LobbySettingItemTable> ὫὡὤὢὤὣὤὥὡὢὭ = new ὠὣὬὩὭὮὥὧὬὨὫ<int, LobbySettingItemTable>(1, 0, 60000, null, new Func<int, LobbySettingItemTable>(ὦὣὯὤὪὡὣὢὡὩὥ.<> c.<> 9.ὡὭὣὭὩὯὢὢὨὯὨ), null, null);
+            //找上面这个Dictionary的引用,就能找到下面这个函数  这个Dictionary存了所有的Item,其实可以全部添加,现在只添加了LobbyDeco
+            //这个Dictionary所属的public static class应该就是静态的全局配置表
             //public static LobbySettingItemTable ὠὡὤὧὮὮὡὥὣὫὡ(int ὣὠὪὦὤὥὭὪὤὥὯ)  通过上面的字符串找到这个全局配置表  LobbySettingItemTable GetItem(nItemId)
 
             if (interactionIdList != null && interactionIdList.Count > 0)
